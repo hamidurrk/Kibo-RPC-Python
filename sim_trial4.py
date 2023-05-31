@@ -52,11 +52,26 @@ def generate_vector_path(target):
     return arr
 
 def three_dim_man(pos, tar):
-    robot.pos = vector(pos[0], pos[1], pos[2])
-    if sqrt(pos[0]**2 + pos[1]**2 + pos[2]**2) <= sqrt(tar[0]**2 + tar[1]**2 + tar[2]**2):
-        robot.pos = vector(tar[0], tar[1], tar[2])
-        rate(2)
+    tem = [0, 0, 0]
+    d = [x - y for x, y in zip(tar, pos)]
+    dx = next((element for element in d if element != 0), None)
+
+    if dx != None:
+        non_zero_indices = [i for i, x in enumerate(d) if x != 0]
+
+        for i in range(len(tem)):
+            if i in non_zero_indices:
+                tem[i] += 1
+
+        for i in range(dx):
+            step = [x + y for x, y in zip(pos, tem)]
+            pos = step
+            print(f"Step: {step}")
+            robot.pos = vector(step[0], step[1], step[2])
+            rate(2)
+    
 checkpoints = generate_vector_path(target)
+print(checkpoints)
 while True:
     three_dim_man(position, position)
     three_dim_man(position, checkpoints[0])
